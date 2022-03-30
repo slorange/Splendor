@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,16 +22,34 @@ namespace Splendor {
 		public MainWindow() {
 			InitializeComponent();
 
-            circle(100, 100, 100, 100);
+            DrawPng();// DrawChip(Colors.Red, 100, 100);
+		}
+        public void DrawPng() {
+            BitmapImage bitmap = new BitmapImage();
+            bitmap.BeginInit();
+            string dir = Directory.GetCurrentDirectory();
+            bitmap.UriSource = new Uri(dir+@"\..\..\images\EmeraldTest.png");
+            bitmap.EndInit();
+            Image image = new Image();
+            image.Width = 100;
+            image.Source = bitmap;
+
+            Canvas.Children.Add(image);
+        }
+
+        public void DrawChip(Color c, int x, int y) {
+
+            Circle(x, y, 150, 75, new SolidColorBrush(c));
 		}
 
-        public void circle(int x, int y, int width, int height) {
+        public void Circle(int x, int y, int width, int height, Brush c) {
 
             Ellipse circle = new Ellipse() {
                 Width = width,
                 Height = height,
-                Stroke = Brushes.Red,
-                StrokeThickness = 6
+                Stroke = Brushes.Black,
+                StrokeThickness = 6,
+                Fill = c
             };
 
             Canvas.Children.Add(circle);
