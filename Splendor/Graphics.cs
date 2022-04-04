@@ -13,41 +13,26 @@ using System.Windows.Shapes;
 namespace Splendor {
 	class Graphics {
         Canvas canvas;
+        int StrokeThickness = 2;
+        int ChipWidth = 60;
+        int ChipHeight = 30;
+        int ChipThickness = 8;
+        MouseButtonEventHandler handler;
+
         public Graphics(Canvas c) {
             canvas = c;
 		}
-        /*public void DrawPng() {
-            BitmapImage bitmap = new BitmapImage();
-            bitmap.BeginInit();
-            string dir = Directory.GetCurrentDirectory();
-            bitmap.UriSource = new Uri(dir + @"\..\..\images\EmeraldTest.png");
-            bitmap.EndInit();
-            Image image = new Image();
-            image.Width = 100;
-            image.Source = bitmap;
-
-            Canvas.Children.Add(image);
-        }*/
-
-
-        int strokeThickness = 2;
-        int width = 60;
-        int height = 30;
-        int thick = 8;
-
-        MouseButtonEventHandler handler;
 
         private void DrawStackClicked() {
             MessageBox.Show("DrawStackClicked");
         }
 
-
         public void DrawCard(int x, int y, Card c) {
             handler = (sender, e) => { c.OnClick(); };
 
-            strokeThickness = 3;
+            StrokeThickness = 3;
             RoundedRectangle(x, y, 100, 150, GemToCardBrush(c.gem), 10);
-            strokeThickness = 2;
+            StrokeThickness = 2;
             DrawText(c.score, x + 10, y, 30, Brushes.Black);
             int i = 0;
             foreach(var cost in c.cost) {
@@ -63,7 +48,7 @@ namespace Splendor {
             handler = (sender, e) => { DrawStackClicked(); };
 
             for (int i = 0; i < count; i++) {
-                DrawChip(c, x, y - thick * i);
+                DrawChip(c, x, y - ChipThickness * i);
             }
         }
 
@@ -87,12 +72,13 @@ namespace Splendor {
         }
 
         private void DrawChip(Color c, int x, int y) {
-            Circle(x, y + thick, width, height, new SolidColorBrush(c));
-            Rectangle(x, y + height / 2, width, thick, new SolidColorBrush(c));
-            VLine(x, y + height / 2, thick);
-            VLine(x + width - strokeThickness, y + height / 2, thick);
-            Circle(x, y, width, height, new SolidColorBrush(c));
+            Circle(x, y + ChipThickness, ChipWidth, ChipHeight, new SolidColorBrush(c));
+            Rectangle(x, y + ChipHeight / 2, ChipWidth, ChipThickness, new SolidColorBrush(c));
+            VLine(x, y + ChipHeight / 2, ChipThickness);
+            VLine(x + ChipWidth - StrokeThickness, y + ChipHeight / 2, ChipThickness);
+            Circle(x, y, ChipWidth, ChipHeight, new SolidColorBrush(c));
         }
+
         private void DrawText(int s, int x, int y, int size, Brush b) {
             DrawText(s.ToString(), x, y, size, b);
         }
@@ -117,20 +103,20 @@ namespace Splendor {
             Circle(x + width - cround, y + height - cround, cround, cround, c);
 
             HLine(x + round, y, width - cround);
-            HLine(x + round, y + height - strokeThickness, width - cround);
+            HLine(x + round, y + height - StrokeThickness, width - cround);
             VLine(x, y + round, height - cround);
-            VLine(x + width - strokeThickness, y + round, height - cround);
+            VLine(x + width - StrokeThickness, y + round, height - cround);
 
-            Rectangle(x + round, y + strokeThickness, width - cround, height - 2 * strokeThickness, c);
-            Rectangle(x + strokeThickness, y + round, width - 2 * strokeThickness, height - cround, c);
+            Rectangle(x + round, y + StrokeThickness, width - cround, height - 2 * StrokeThickness, c);
+            Rectangle(x + StrokeThickness, y + round, width - 2 * StrokeThickness, height - cround, c);
         }
 
         private void HLine(int x, int y, int l) {
-            Line(x, y, l, strokeThickness);
+            Line(x, y, l, StrokeThickness);
         }
 
         private void VLine(int x, int y, int l) {
-            Line(x, y, strokeThickness, l);
+            Line(x, y, StrokeThickness, l);
         }
 
         private void Line(int x, int y, int x2, int y2) {
@@ -141,7 +127,7 @@ namespace Splendor {
             Rectangle rect = new Rectangle() {
                 Width = width,
                 Height = height,
-                StrokeThickness = strokeThickness,
+                StrokeThickness = StrokeThickness,
                 Fill = c
             };
 			rect.MouseLeftButtonDown += handler;
@@ -154,14 +140,13 @@ namespace Splendor {
             rect.SetValue(Canvas.TopProperty, (double)y);
         }
 
-
 		private void Circle(int x, int y, int width, int height, Brush c) {
 
             Ellipse circle = new Ellipse() {
                 Width = width,
                 Height = height,
                 Stroke = Brushes.Black,
-                StrokeThickness = strokeThickness,
+                StrokeThickness = StrokeThickness,
                 Fill = c
             };
             circle.MouseLeftButtonDown += handler;
@@ -171,5 +156,18 @@ namespace Splendor {
             circle.SetValue(Canvas.LeftProperty, (double)x);
             circle.SetValue(Canvas.TopProperty, (double)y);
         }
+
+        /*public void DrawPng() {
+            BitmapImage bitmap = new BitmapImage();
+            bitmap.BeginInit();
+            string dir = Directory.GetCurrentDirectory();
+            bitmap.UriSource = new Uri(dir + @"\..\..\images\EmeraldTest.png");
+            bitmap.EndInit();
+            Image image = new Image();
+            image.Width = 100;
+            image.Source = bitmap;
+
+            Canvas.Children.Add(image);
+        }*/
     }
 }

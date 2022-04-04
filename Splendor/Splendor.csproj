@@ -55,7 +55,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="MainWindow.xaml">
+    <Page Include="View.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -65,9 +65,10 @@
     </Compile>
     <Compile Include="Card.cs" />
     <Compile Include="CardLoader.cs" />
+    <Compile Include="Game.cs" />
     <Compile Include="Graphics.cs" />
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
+    <Compile Include="View.xaml.cs">
+      <DependentUpon>View.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
