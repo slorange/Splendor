@@ -23,12 +23,8 @@ namespace Splendor {
             canvas = c;
 		}
 
-        private void DrawStackClicked() {
-            MessageBox.Show("DrawStackClicked");
-        }
-
         public void DrawCard(int x, int y, Card c) {
-            handler = (sender, e) => { c.OnClick(); };
+            handler = (sender, e) => { Game.Instance.CardClicked(c); };
 
             StrokeThickness = 3;
             RoundedRectangle(x, y, 100, 150, GemToCardBrush(c.gem), 10);
@@ -44,14 +40,15 @@ namespace Splendor {
             }
         }
 
-        public void DrawStack(Color c, int x, int y, int count) {
-            handler = (sender, e) => { DrawStackClicked(); };
+        public void DrawStack(Gem g, int x, int y, int count) {
+            handler = (sender, e) => { Game.Instance.GemClicked(g); };
 
             for (int i = 0; i < count; i++) {
-                DrawChip(c, x, y - ChipThickness * i);
+                DrawChip(GemToBrush(g), x, y - ChipThickness * i);
             }
         }
 
+        //https://docs.microsoft.com/en-us/dotnet/maui/user-interface/brushes/solidcolor
         private Brush GemToCardBrush(Gem g) {
             if (g == Gem.Diamond) return Brushes.Snow;
             if (g == Gem.Emerald) return Brushes.LightGreen;
@@ -71,12 +68,12 @@ namespace Splendor {
             return null;
         }
 
-        private void DrawChip(Color c, int x, int y) {
-            Circle(x, y + ChipThickness, ChipWidth, ChipHeight, new SolidColorBrush(c));
-            Rectangle(x, y + ChipHeight / 2, ChipWidth, ChipThickness, new SolidColorBrush(c));
+        private void DrawChip(Brush b, int x, int y) {
+            Circle(x, y + ChipThickness, ChipWidth, ChipHeight, b);
+            Rectangle(x, y + ChipHeight / 2, ChipWidth, ChipThickness, b);
             VLine(x, y + ChipHeight / 2, ChipThickness);
             VLine(x + ChipWidth - StrokeThickness, y + ChipHeight / 2, ChipThickness);
-            Circle(x, y, ChipWidth, ChipHeight, new SolidColorBrush(c));
+            Circle(x, y, ChipWidth, ChipHeight, b);
         }
 
         private void DrawText(int s, int x, int y, int size, Brush b) {

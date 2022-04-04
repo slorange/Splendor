@@ -19,7 +19,7 @@ namespace Splendor {
 
 			graphics = new Graphics(Canvas);
 			Instance = this;
-			game = new Game(this);
+			game = new Game(this, 4);
 
 			Redraw();
 		}
@@ -27,18 +27,18 @@ namespace Splendor {
 		public static void Redraw() {
 			Instance.Canvas.Children.Clear();
 
-			graphics.DrawStack(Colors.Red, 100, 120, 2);
-			graphics.DrawStack(Colors.Green, 200, 120, 5);
-			graphics.DrawStack(Colors.Blue, 300, 120, 7);
-			graphics.DrawStack(Colors.Snow, 400, 120, 3);
-			graphics.DrawStack(Colors.SaddleBrown, 500, 120, 1);
-			graphics.DrawStack(Colors.Gold, 600, 120, 4);
-			var deck = CardLoader.LoadCards();
+			int x = 0;
+			foreach (var kv in game.Gems) {
+				graphics.DrawStack(kv.Key, 100+x*70, 120, kv.Value);
+				x++;
+			}
 
-			int i = 0;
-			foreach (var c in deck) {
-				graphics.DrawCard(i % 16 * 110, i / 16 * 160, c);
-				i++;
+			for (int i = 0; i < 3; i++) {
+				for (int j = 0; j < 4; j++) {
+					var card = game.Board[i][j];
+					if (card == null) continue;
+					graphics.DrawCard(300 + j * 110, 200 + i * 160, card);
+				}
 			}
 		}
 

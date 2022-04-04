@@ -14,14 +14,10 @@ namespace Splendor {
 		public Dictionary<Gem, int> cost;
 
 		public Card(int tier, int score, Gem gem, Dictionary<Gem, int> cost) {
-			this.tier = tier;
+			this.tier = tier-1;
 			this.score = score;
 			this.gem = gem;
 			this.cost = cost;
-		}
-
-		public void OnClick() {
-			MessageBox.Show(gem + " Card Clicked");
 		}
 
 		public override string ToString() {
