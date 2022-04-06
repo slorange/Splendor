@@ -29,7 +29,7 @@ namespace Splendor {
             StrokeThickness = 3;
             RoundedRectangle(x, y, 100, 150, GemToCardBrush(c.gem), 10);
             StrokeThickness = 2;
-            DrawText(c.score, x + 10, y, 30, Brushes.Black);
+            if(c.score > 0) DrawText(c.score, x + 10, y, 30, Brushes.Black);
             int i = 0;
             foreach(var cost in c.cost) {
                 int y2 = y +120 - i * 28;

@@ -12,32 +12,44 @@ namespace Splendor {
 	public partial class View : Window {
 
 		static Graphics graphics;
-		static View Instance;
 		static Game game;
 		public View() {
 			InitializeComponent();
 
 			graphics = new Graphics(Canvas);
-			Instance = this;
 			game = new Game(this, 4);
 
 			Redraw();
 		}
 
-		public static void Redraw() {
-			Instance.Canvas.Children.Clear();
+		public void Redraw() {
+			Canvas.Children.Clear();
 
-			int x = 0;
+			int k = 0;
 			foreach (var kv in game.Gems) {
-				graphics.DrawStack(kv.Key, 100+x*70, 120, kv.Value);
-				x++;
+				graphics.DrawStack(kv.Key, 700+k*70, 120, kv.Value);
+				k++;
 			}
 
 			for (int i = 0; i < 3; i++) {
 				for (int j = 0; j < 4; j++) {
 					var card = game.Board[i][j];
 					if (card == null) continue;
-					graphics.DrawCard(300 + j * 110, 200 + i * 160, card);
+					graphics.DrawCard(700 + j * 110, 200 + i * 160, card);
+				}
+			}
+
+			int[] px = { 10, 1300, 1300, 10 };
+			int[] py = { 800, 800, 400, 400 };
+			for (int i = 0; i < game.Players.Length; i++) {
+				var p = game.Players[i];
+				var x = px[i];
+				var y = py[i];
+
+				int l = 0;
+				foreach (var kv in p.Gems) {
+					graphics.DrawStack(kv.Key, x + l * 70, y, kv.Value);
+					l++;
 				}
 			}
 		}

@@ -67,6 +67,7 @@
     <Compile Include="CardLoader.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Graphics.cs" />
+    <Compile Include="Player.cs" />
     <Compile Include="View.xaml.cs">
       <DependentUpon>View.xaml</DependentUpon>
       <SubType>Code</SubType>

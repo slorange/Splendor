@@ -13,8 +13,9 @@ namespace Splendor {
 
 		public Card[][] Board = new Card[3][];
 		public Dictionary<Gem, int> Gems = new Dictionary<Gem, int>();
-
-		private Random rand = new Random();
+		public Player[] Players;
+		public int Turn;
+		private Random Rand = new Random();
 
 		public Game(View v, int players) {
 			Instance = this;
@@ -39,6 +40,12 @@ namespace Splendor {
 			foreach(Gem g in Enum.GetValues(typeof(Gem))) {
 				Gems.Add(g, g == Gem.Gold ? 5 : 7);
 			}
+
+			//players
+			Players = new Player[players];
+			for(int i = 0; i < players; i++) {
+				Players[i] = new Player();
+			}
 		}
 
 		private void Draw(int tier, int place) {
@@ -47,7 +54,7 @@ namespace Splendor {
 				Board[tier][place] = null;
 				return;
 			}
-			int n = rand.Next(deck.Count);
+			int n = Rand.Next(deck.Count);
 			Board[tier][place] = deck[n];
 			deck.RemoveAt(n);
 		}
@@ -56,9 +63,14 @@ namespace Splendor {
 			for (int tier = 0; tier < 3; tier++) {
 				for (int place = 0; place < 4; place++) {
 					if (Board[tier][place] == c) {
-						Draw(tier, place);
-						View.Redraw();
-						return;
+						Player p = Players[Turn];
+						if (p.Afford(c)) {
+							p.Buy(c);
+							Draw(tier, place);
+							view?.Redraw();
+							NextTurn();
+							return;
+						}
 					}
 				}
 			}
@@ -66,7 +78,13 @@ namespace Splendor {
 
 		public void GemClicked(Gem g) {
 			Gems[g]--;
-			View.Redraw();
+			Players[Turn].Gems[g]++;
+			NextTurn(); //TODO 3 or 2 coins per turn
+			view?.Redraw();
+		}
+
+		public void NextTurn() {
+			Turn = (Turn + 1) % Players.Length;
 		}
 	}
 }
