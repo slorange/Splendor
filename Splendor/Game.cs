@@ -65,7 +65,10 @@ namespace Splendor {
 					if (Board[tier][place] == c) {
 						Player p = Players[Turn];
 						if (p.Afford(c)) {
-							p.Buy(c);
+							var payment = p.Buy(c);
+							foreach(Gem g in payment.Keys) {
+								Gems[g] += payment[g];
+							}
 							Draw(tier, place);
 							view?.Redraw();
 							NextTurn();
@@ -77,6 +80,7 @@ namespace Splendor {
 		}
 
 		public void GemClicked(Gem g) {
+			if (Gems[g] == 0) return;
 			Gems[g]--;
 			Players[Turn].Gems[g]++;
 			NextTurn(); //TODO 3 or 2 coins per turn

@@ -39,20 +39,29 @@ namespace Splendor {
 				}
 			}
 
-			int[] px = { 10, 1300, 1300, 10 };
-			int[] py = { 800, 800, 400, 400 };
+			int[] px = { 10, 1250, 1250, 10 };
+			int[] py = { 820, 820, 410, 410 };
 			for (int i = 0; i < game.Players.Length; i++) {
 				var p = game.Players[i];
 				var x = px[i];
 				var y = py[i];
 
+				int m = 0;
+				foreach(var kv in p.Cards) {
+					int n = kv.Value.Count-1;
+					foreach (var c in kv.Value) {
+						graphics.DrawCard(x + m * 110, y - n * 40 - 150, c);
+						n--;
+					}
+					m++;
+				}
+
 				int l = 0;
 				foreach (var kv in p.Gems) {
-					graphics.DrawStack(kv.Key, x + l * 70, y, kv.Value);
+					graphics.DrawStack(kv.Key, 4 + x + l * 93, y, kv.Value);
 					l++;
 				}
 			}
 		}
-
 	}
 }

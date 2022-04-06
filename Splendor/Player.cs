@@ -28,18 +28,19 @@ namespace Splendor {
 		}
 
 		//TODO: give player a choice whether or not to use gold coins. Might want to hoard a certain one to prevent other players.
-		public void Buy(Card c) {
-			Cards[c.gem].Add(c);
+		public Dictionary<Gem, int> Buy(Card c) {
+			var payment = new Dictionary<Gem, int>();
+			payment[Gem.Gold] = 0;
 			foreach (Gem g in c.cost.Keys) {
-				var cost = c.cost[g] - Cards[g].Count;
-				if (Gems[g] >= cost) {
-					Gems[g] -= cost;
-				}
-				else {
-					Gems[g] = 0;
-					Gems[Gem.Gold] -= cost - Gems[g];
-				}
+				var cost = Math.Max(c.cost[g] - Cards[g].Count, 0);
+				payment[g] = Math.Min(cost, Gems[g]);
+				payment[Gem.Gold] += Math.Max(cost - Gems[g], 0);
 			}
+			foreach(Gem g in payment.Keys) {
+				Gems[g] -= payment[g];
+			}
+			Cards[c.gem].Add(c);
+			return payment;
 		}
 	}
 }

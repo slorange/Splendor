@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Splendor"
         mc:Ignorable="d"
-        Title="Splendor" Height="900" Width="1800">
+        Title="Splendor" Height="900" Width="1820" Left="10" Top="10">
     <Grid>
         <Canvas Name="Canvas"/>
     </Grid>
