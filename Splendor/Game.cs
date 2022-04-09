@@ -130,7 +130,7 @@ namespace Splendor {
 		}
 
 		public void CheckWin() {
-			int win = 1;
+			int win = 15;
 			if (Players[Turn].CheckWin(win)) {
 				view?.Redraw();
 				MessageBox.Show($"Player {Turn+1} reached {win} first.\nPlayer {Turn+1} Wins!");
