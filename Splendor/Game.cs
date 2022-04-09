@@ -60,6 +60,7 @@ namespace Splendor {
 		}
 
 		public void CardClicked(Card c) {
+			if (draw.Count > 0) return;
 			for (int tier = 0; tier < 3; tier++) {
 				for (int place = 0; place < 4; place++) {
 					if (Board[tier][place] == c) {
@@ -80,19 +81,40 @@ namespace Splendor {
 		}
 
 		List<Gem> draw = new List<Gem>();
+		bool coinLimit;
 		public void GemClicked(Gem g) {
+			if (coinLimit) {
+				ReturnGem(g);
+			}
+			else {
+				GrabGem(g);
+			}
+		}
+
+		public void ReturnGem(Gem g) {
+			var p = Players[Turn];
+			if (p.Gems[g] == 0) return;
+			Gems[g]++;
+			p.Gems[g]--;
+			NextTurn();
+			view?.Redraw();
+		}
+
+		public void GrabGem(Gem g) {
 			if (Gems[g] == 0) return;
 			if (draw.Contains(g) && (Gems[g] < 3 || draw.Count > 1)) return;
 			Gems[g]--;
 			Players[Turn].Gems[g]++;
 			draw.Add(g);
-			if(draw.Count() == 3 || (draw.Count() == 2 && draw[0] == draw[1])) {
+			if (draw.Count() == 3 || (draw.Count() == 2 && draw[0] == draw[1])) {
 				NextTurn();
 			}
 			view?.Redraw();
 		}
 
 		public void NextTurn() {
+			coinLimit = Players[Turn].CoinLimit();
+			if (coinLimit) return;
 			Turn = (Turn + 1) % Players.Length;
 			draw.Clear();
 		}

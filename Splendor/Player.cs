@@ -42,5 +42,13 @@ namespace Splendor {
 			Cards[c.gem].Add(c);
 			return payment;
 		}
+
+		public bool CoinLimit() {
+			var c = 0;
+			foreach(var g in Gems.Keys) {
+				c += Gems[g];
+			}
+			return c > 10;
+		}
 	}
 }

@@ -1,5 +1,4 @@
-﻿coin limit
-reserving cards
+﻿reserving cards
 nobles
 winning on 15
 
