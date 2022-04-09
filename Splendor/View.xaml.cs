@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -18,9 +18,13 @@ namespace Splendor {
 			InitializeComponent();
 
 			graphics = new Graphics(Canvas);
-			game = new Game(this, PLAYERS);
+			StartNewGame();
 
 			Redraw();
+		}
+
+		public void StartNewGame() {
+			game = new Game(this, PLAYERS);
 		}
 
 		public void Redraw() {
@@ -41,11 +45,13 @@ namespace Splendor {
 			}
 
 			int[] px = { 10, 1250, 1250, 10 };
-			int[] py = { 820, 820, 410, 410 };
+			int[] py = { 820, 820, 370, 370 };
 			for (int i = 0; i < game.Players.Length; i++) {
 				var p = game.Players[i];
 				var x = px[i];
 				var y = py[i];
+
+				graphics.DrawPlayerArea(x, y-360, 550, 400, game.Turn == i);
 
 				int m = 0;
 				foreach(var kv in p.Cards) {

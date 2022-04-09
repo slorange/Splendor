@@ -50,5 +50,15 @@ namespace Splendor {
 			}
 			return c > 10;
 		}
+
+		public bool CheckWin(int n) {
+			int c = 0;
+			foreach(var l in Cards.Values) {
+				foreach(var card in l) {
+					c += card.score;
+				}
+			}
+			return c >= n;
+		}
 	}
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Splendor {
 	public class Game {
@@ -70,9 +71,10 @@ namespace Splendor {
 							foreach(Gem g in payment.Keys) {
 								Gems[g] += payment[g];
 							}
+							CheckWin();
 							Draw(tier, place);
-							view?.Redraw();
 							NextTurn();
+							view?.Redraw();
 							return;
 						}
 					}
@@ -106,7 +108,7 @@ namespace Splendor {
 			Gems[g]--;
 			Players[Turn].Gems[g]++;
 			draw.Add(g);
-			if (draw.Count() == 3 || (draw.Count() == 2 && draw[0] == draw[1])) {
+			if (draw.Count() == 3 || (draw.Count() == 2 && draw[0] == draw[1]) || NoMoves()) {
 				NextTurn();
 			}
 			view?.Redraw();
@@ -117,6 +119,23 @@ namespace Splendor {
 			if (coinLimit) return;
 			Turn = (Turn + 1) % Players.Length;
 			draw.Clear();
+		}
+
+		public bool NoMoves() {
+			foreach(Gem g in Gems.Keys) {
+				if (Gems[g] > 0 && !draw.Contains(g)) return false;
+			}
+			if (draw.Count() == 1 && Gems[draw[0]] >= 3) return false;
+			return true;
+		}
+
+		public void CheckWin() {
+			int win = 1;
+			if (Players[Turn].CheckWin(win)) {
+				view?.Redraw();
+				MessageBox.Show($"Player {Turn+1} reached {win} first.\nPlayer {Turn+1} Wins!");
+				view?.StartNewGame();
+			}
 		}
 	}
 }

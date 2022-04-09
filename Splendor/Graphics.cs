@@ -14,6 +14,7 @@ namespace Splendor {
 	class Graphics {
         Canvas canvas;
         int StrokeThickness = 2;
+        Brush StrokeBrush = Brushes.Black;
         int ChipWidth = 60;
         int ChipHeight = 30;
         int ChipThickness = 8;
@@ -28,7 +29,7 @@ namespace Splendor {
 
             StrokeThickness = 3;
             RoundedRectangle(x, y, 100, 150, GemToCardBrush(c.gem), 10);
-            StrokeThickness = 2;
+            ResetStroke();
             if(c.score > 0) DrawText(c.score, x + 10, y, 30, Brushes.Black);
             int i = 0;
             foreach(var cost in c.cost) {
@@ -46,6 +47,19 @@ namespace Splendor {
             for (int i = 0; i < count; i++) {
                 DrawChip(GemToBrush(g), x, y - ChipThickness * i);
             }
+        }
+
+        public void DrawPlayerArea(int x, int y, int w, int h, bool turn) {
+            handler = (sender, e) => {};
+            StrokeThickness = 5;
+            if (turn) StrokeBrush = Brushes.Fuchsia;
+            RoundedRectangle(x, y, w, h, Brushes.White, 10);
+            ResetStroke();
+        }
+
+        private void ResetStroke() {
+            StrokeThickness = 2;
+            StrokeBrush = Brushes.Black;
         }
 
         //https://docs.microsoft.com/en-us/dotnet/maui/user-interface/brushes/solidcolor
@@ -117,7 +131,7 @@ namespace Splendor {
         }
 
         private void Line(int x, int y, int x2, int y2) {
-            Rectangle(x, y, x2, y2, Brushes.Black, true);
+            Rectangle(x, y, x2, y2, StrokeBrush, true);
         }
 
         private void Rectangle(int x, int y, int width, int height, Brush c, bool stroke = false) {
@@ -129,7 +143,7 @@ namespace Splendor {
             };
 			rect.MouseLeftButtonDown += handler;
 
-            if (stroke) rect.Stroke = Brushes.Black;
+            if (stroke) rect.Stroke = StrokeBrush;
 
             canvas.Children.Add(rect);
 
@@ -142,7 +156,7 @@ namespace Splendor {
             Ellipse circle = new Ellipse() {
                 Width = width,
                 Height = height,
-                Stroke = Brushes.Black,
+                Stroke = StrokeBrush,
                 StrokeThickness = StrokeThickness,
                 Fill = c
             };
