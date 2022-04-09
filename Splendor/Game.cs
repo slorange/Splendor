@@ -79,16 +79,22 @@ namespace Splendor {
 			}
 		}
 
+		List<Gem> draw = new List<Gem>();
 		public void GemClicked(Gem g) {
 			if (Gems[g] == 0) return;
+			if (draw.Contains(g) && (Gems[g] < 3 || draw.Count > 1)) return;
 			Gems[g]--;
 			Players[Turn].Gems[g]++;
-			NextTurn(); //TODO 3 or 2 coins per turn
+			draw.Add(g);
+			if(draw.Count() == 3 || (draw.Count() == 2 && draw[0] == draw[1])) {
+				NextTurn();
+			}
 			view?.Redraw();
 		}
 
 		public void NextTurn() {
 			Turn = (Turn + 1) % Players.Length;
+			draw.Clear();
 		}
 	}
 }
