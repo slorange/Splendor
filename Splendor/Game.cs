@@ -39,7 +39,7 @@ namespace Splendor {
 
 			//gems
 			foreach(Gem g in Enum.GetValues(typeof(Gem))) {
-				Gems.Add(g, g == Gem.Gold ? 5 : 7);
+				Gems.Add(g, g == Gem.Gold ? 5 : 2 + (players == 4 ? 5 : players));
 			}
 
 			//players
@@ -104,11 +104,12 @@ namespace Splendor {
 
 		public void GrabGem(Gem g) {
 			if (Gems[g] == 0) return;
-			if (draw.Contains(g) && (Gems[g] < 3 || draw.Count > 1)) return;
+			if (draw.Contains(g) && (Gems[g] < 3 || draw.Count > 1 || g == Gem.Gold)) return;
+			if (g == Gem.Gold && draw.Count > 1) return;
 			Gems[g]--;
 			Players[Turn].Gems[g]++;
 			draw.Add(g);
-			if (draw.Count() == 3 || (draw.Count() == 2 && draw[0] == draw[1]) || NoMoves()) {
+			if (draw.Count() == 3 || (draw.Count() == 2 && (draw[0] == draw[1] || draw[0] == Gem.Gold || draw[1] == Gem.Gold)) || NoMoves()) {
 				NextTurn();
 			}
 			view?.Redraw();
