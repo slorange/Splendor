@@ -10,8 +10,6 @@ using System.Windows.Media;
 
 namespace Splendor {
 	public partial class View : Window {
-		static int PLAYERS = 4;
-
 		static Graphics graphics;
 		static Game game;
 		public View() {
@@ -24,7 +22,7 @@ namespace Splendor {
 		}
 
 		public void StartNewGame() {
-			game = new Game(this, PLAYERS);
+			game = new Game(this);
 		}
 
 		public void Redraw() {

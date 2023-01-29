@@ -7,6 +7,11 @@ using System.Windows;
 
 namespace Splendor {
 	public class Game {
+		static int PLAYERS = 2;
+		static int WIN_SCORE = 25;
+		static int STARTING_CARD_COUNT = 5;
+
+
 		public static Game Instance;
 		View view;
 
@@ -18,7 +23,7 @@ namespace Splendor {
 		public int Turn;
 		private Random Rand = new Random();
 
-		public Game(View v, int players) {
+		public Game(View v) {
 			Instance = this;
 			view = v;
 
@@ -30,6 +35,8 @@ namespace Splendor {
 			foreach (var c in deck) {
 				Decks[c.tier].Add(c);
 			}
+
+
 			for (int i = 0; i < 3; i++) {
 				Board[i] = new Card[4];
 				for (int j = 0; j < 4; j++) {
@@ -39,25 +46,40 @@ namespace Splendor {
 
 			//gems
 			foreach(Gem g in Enum.GetValues(typeof(Gem))) {
-				Gems.Add(g, g == Gem.Gold ? 5 : 2 + (players == 4 ? 5 : players));
+				Gems.Add(g, g == Gem.Gold ? 5 : 2 + (PLAYERS == 4 ? 5 : PLAYERS));
 			}
 
 			//players
-			Players = new Player[players];
-			for(int i = 0; i < players; i++) {
+			Players = new Player[PLAYERS];
+			for(int i = 0; i < PLAYERS; i++) {
 				Players[i] = new Player();
+			}
+
+			for(int i = 0; i < STARTING_CARD_COUNT; i++) {
+				foreach (var p in Players) {
+					var c = Draw(Decks[0]);
+					if (c == null) continue;
+					p.Cards[c.gem].Add(c);
+				}
 			}
 		}
 
 		private void Draw(int tier, int place) {
 			var deck = Decks[tier];
-			if (deck.Count == 0) {
+			var card = Draw(deck);
+			if (card == null) {
 				Board[tier][place] = null;
 				return;
 			}
+			Board[tier][place] = card;
+		}
+
+		private Card Draw(List<Card> deck) {
+			if (deck.Count == 0) return null;
 			int n = Rand.Next(deck.Count);
-			Board[tier][place] = deck[n];
+			var c = deck[n];
 			deck.RemoveAt(n);
+			return c;
 		}
 
 		public void CardClicked(Card c) {
@@ -131,10 +153,9 @@ namespace Splendor {
 		}
 
 		public void CheckWin() {
-			int win = 15;
-			if (Players[Turn].CheckWin(win)) {
+			if (Players[Turn].CheckWin(WIN_SCORE)) {
 				view?.Redraw();
-				MessageBox.Show($"Player {Turn+1} reached {win} first.\nPlayer {Turn+1} Wins!");
+				MessageBox.Show($"Player {Turn+1} reached {WIN_SCORE} first.\nPlayer {Turn+1} Wins!");
 				view?.StartNewGame();
 			}
 		}
