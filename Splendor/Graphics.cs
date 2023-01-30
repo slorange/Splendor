@@ -76,7 +76,7 @@ namespace Splendor {
             if (g == Gem.Diamond) return Brushes.Snow;
             if (g == Gem.Emerald) return Brushes.Green;
             if (g == Gem.Gold) return Brushes.Gold;
-            if (g == Gem.Onyx) return Brushes.SaddleBrown;
+            if (g == Gem.Onyx) return new SolidColorBrush(Color.FromRgb(70, 30, 0));// Brushes.SaddleBrown;
             if (g == Gem.Ruby) return Brushes.Red;
             if (g == Gem.Sapphire) return Brushes.Blue;
             return null;

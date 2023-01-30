@@ -36,11 +36,10 @@ namespace Splendor {
 				Decks[c.tier].Add(c);
 			}
 
-
 			for (int i = 0; i < 3; i++) {
 				Board[i] = new Card[4];
 				for (int j = 0; j < 4; j++) {
-					Draw(i, j);
+					DrawToBoard(i, j);
 				}
 			}
 
@@ -55,6 +54,7 @@ namespace Splendor {
 				Players[i] = new Player();
 			}
 
+			//starting cards
 			for(int i = 0; i < STARTING_CARD_COUNT; i++) {
 				foreach (var p in Players) {
 					var c = Draw(Decks[0]);
@@ -64,14 +64,10 @@ namespace Splendor {
 			}
 		}
 
-		private void Draw(int tier, int place) {
+		private void DrawToBoard(int tier, int place) {
 			var deck = Decks[tier];
 			var card = Draw(deck);
-			if (card == null) {
-				Board[tier][place] = null;
-				return;
-			}
-			Board[tier][place] = card;
+			Board[tier][place] = card; // can be null
 		}
 
 		private Card Draw(List<Card> deck) {
@@ -94,7 +90,7 @@ namespace Splendor {
 								Gems[g] += payment[g];
 							}
 							CheckWin();
-							Draw(tier, place);
+							DrawToBoard(tier, place);
 							NextTurn();
 							view?.Redraw();
 							return;
