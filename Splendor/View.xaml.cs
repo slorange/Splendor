@@ -24,8 +24,10 @@ namespace Splendor {
 		public void StartNewGame() {
 			game = new Game(this);
 		}
-
 		public void Redraw() {
+			Dispatcher.Invoke(RedrawHelper);
+		}
+		private void RedrawHelper() {
 			Canvas.Children.Clear();
 
 			int k = 0;

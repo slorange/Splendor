@@ -2,15 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 
-namespace Splendor {
+namespace Splendor
+{
 	public class Game {
-		static int PLAYERS = 2;
+		static int PLAYERS = 4;
 		static int WIN_SCORE = 25;
 		static int STARTING_CARD_COUNT = 5;
-
+		static int AI = 3;
 
 		public static Game Instance;
 		View view;
@@ -51,7 +54,7 @@ namespace Splendor {
 			//players
 			Players = new Player[PLAYERS];
 			for(int i = 0; i < PLAYERS; i++) {
-				Players[i] = new Player();
+				Players[i] = i < (PLAYERS - AI) ? new Player() : new AI(this);
 			}
 
 			//starting cards
@@ -79,6 +82,11 @@ namespace Splendor {
 		}
 
 		public void CardClicked(Card c) {
+			if (Players[Turn] is AI) return;
+			CardSelected(c);
+		}
+
+		public void CardSelected(Card c) { 
 			if (draw.Count > 0) return;
 			for (int tier = 0; tier < 3; tier++) {
 				for (int place = 0; place < 4; place++) {
@@ -89,9 +97,8 @@ namespace Splendor {
 							foreach(Gem g in payment.Keys) {
 								Gems[g] += payment[g];
 							}
-							CheckWin();
 							DrawToBoard(tier, place);
-							NextTurn();
+							if (!CheckWin()) NextTurn();
 							view?.Redraw();
 							return;
 						}
@@ -102,7 +109,13 @@ namespace Splendor {
 
 		List<Gem> draw = new List<Gem>();
 		bool coinLimit;
+
 		public void GemClicked(Gem g) {
+			if (Players[Turn] is AI) return;
+			GemSelected(g);
+		}
+
+		public void GemSelected(Gem g) {
 			if (coinLimit) {
 				ReturnGem(g);
 			}
@@ -138,6 +151,8 @@ namespace Splendor {
 			if (coinLimit) return;
 			Turn = (Turn + 1) % Players.Length;
 			draw.Clear();
+			var p = Players[Turn];
+			if (p is AI) new Thread(((AI)p).Move).Start();
 		}
 
 		public bool NoMoves() {
@@ -148,12 +163,14 @@ namespace Splendor {
 			return true;
 		}
 
-		public void CheckWin() {
+		public bool CheckWin() {
 			if (Players[Turn].CheckWin(WIN_SCORE)) {
 				view?.Redraw();
 				MessageBox.Show($"Player {Turn+1} reached {WIN_SCORE} first.\nPlayer {Turn+1} Wins!");
 				view?.StartNewGame();
+				return true;
 			}
+			return false;
 		}
 	}
 }
